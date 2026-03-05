@@ -1,0 +1,22 @@
+
+> tirestore-frontend@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.127:3000
+- Environments: .env.local
+
+✓ Starting...
+Creating turbopack project { dir: 'D:\\Development\\tirestore\\frontend', testMode: true }
+✓ Ready in 323ms
+⚠ Cross origin request detected from 192.168.0.127 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ GET / 200 in 262ms (compile: 144ms, render: 118ms)
+ GET / 200 in 80ms (compile: 6ms, render: 74ms)
+ GET / 200 in 102ms (compile: 4ms, render: 98ms)
+ GET / 200 in 158ms (compile: 38ms, render: 120ms)
+✓ Compiled in 335.7s
+ GET / 200 in 178ms (compile: 38ms, render: 140ms)
+✓ Compiled in 173.9s
+^C^C

@@ -1,0 +1,22 @@
+
+> tirestore-backend@1.0.0 dev
+> nodemon server.js
+
+[33m[nodemon] 3.1.14[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,cjs,json[39m
+[32m[nodemon] starting `node server.js`[39m
+🚀 TireStore backend running on http://localhost:4000
+[Products] Fetching: https://p511.eontyre.com/api/webshop/products?webshopId=38&version=2&typeId=1&tyreType=2&vehicleType=alla&searchMode=4&showNoimageRims=1&showNoimageTyres=1&limit=24&page=1&minQuantityInStock=4&minimumTestScore=0&loadIndex=0&loadIndexRear=0&isElectricVehicle=false&isEnforced=false&isMCVehicleType=false&isRunflat=false&isSilence=false&isStaggeredFitment=false&includeLocations%5B%5D=1048 | key set: yes
+[Products] Fetching: https://p511.eontyre.com/api/webshop/products?webshopId=38&version=2&typeId=1&tyreType=2&vehicleType=alla&searchMode=4&showNoimageRims=1&showNoimageTyres=1&limit=24&page=1&minQuantityInStock=4&minimumTestScore=0&loadIndex=0&loadIndexRear=0&isElectricVehicle=false&isEnforced=false&isMCVehicleType=false&isRunflat=false&isSilence=false&isStaggeredFitment=false&includeLocations%5B%5D=1048 | key set: yes
+[Products] Fetching: https://p511.eontyre.com/api/webshop/products?webshopId=38&version=2&typeId=1&tyreType=2&vehicleType=alla&searchMode=4&showNoimageRims=1&showNoimageTyres=1&limit=24&page=1&minQuantityInStock=4&minimumTestScore=0&loadIndex=0&loadIndexRear=0&isElectricVehicle=false&isEnforced=false&isMCVehicleType=false&isRunflat=false&isSilence=false&isStaggeredFitment=false&diameter=15&includeLocations%5B%5D=1048 | key set: yes
+[Products] Fetching: https://p511.eontyre.com/api/webshop/products?webshopId=38&version=2&typeId=1&tyreType=2&vehicleType=alla&searchMode=4&showNoimageRims=1&showNoimageTyres=1&limit=24&page=1&minQuantityInStock=4&minimumTestScore=0&loadIndex=0&loadIndexRear=0&isElectricVehicle=false&isEnforced=false&isMCVehicleType=false&isRunflat=false&isSilence=false&isStaggeredFitment=false&diameter=15&includeLocations%5B%5D=1048 | key set: yes
+[Products] Fetching: https://p511.eontyre.com/api/webshop/products?webshopId=38&version=2&typeId=1&tyreType=2&vehicleType=alla&searchMode=4&showNoimageRims=1&showNoimageTyres=1&limit=1&page=1&minQuantityInStock=4&minimumTestScore=0&loadIndex=0&loadIndexRear=0&isElectricVehicle=false&isEnforced=false&isMCVehicleType=false&isRunflat=false&isSilence=false&isStaggeredFitment=false&query=PIRELLI&includeLocations%5B%5D=1048 | key set: yes
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+🚀 TireStore backend running on http://localhost:4000
+[Products] Fetching: https://p511.eontyre.com/api/webshop/products?webshopId=38&version=2&typeId=1&tyreType=2&vehicleType=alla&searchMode=4&showNoimageRims=1&showNoimageTyres=1&limit=1&page=1&minQuantityInStock=4&minimumTestScore=0&loadIndex=0&loadIndexRear=0&isElectricVehicle=false&isEnforced=false&isMCVehicleType=false&isRunflat=false&isSilence=false&isStaggeredFitment=false&query=PIRELLI&includeLocations%5B%5D=1048 | key set: yes
+[Products] Fetching: https://p511.eontyre.com/api/webshop/products?webshopId=38&version=2&typeId=1&tyreType=2&vehicleType=alla&searchMode=4&showNoimageRims=1&showNoimageTyres=1&limit=24&page=1&minQuantityInStock=4&minimumTestScore=0&loadIndex=0&loadIndexRear=0&isElectricVehicle=false&isEnforced=false&isMCVehicleType=false&isRunflat=false&isSilence=false&isStaggeredFitment=false&diameter=15&includeLocations%5B%5D=1048 | key set: yes
+[Products] Fetching: https://p511.eontyre.com/api/webshop/products?webshopId=38&version=2&typeId=1&tyreType=2&vehicleType=alla&searchMode=4&showNoimageRims=1&showNoimageTyres=1&limit=24&page=1&minQuantityInStock=4&minimumTestScore=0&loadIndex=0&loadIndexRear=0&isElectricVehicle=false&isEnforced=false&isMCVehicleType=false&isRunflat=false&isSilence=false&isStaggeredFitment=false&diameter=15&includeLocations%5B%5D=1048 | key set: yes
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
