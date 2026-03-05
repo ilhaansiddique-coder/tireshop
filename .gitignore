@@ -8,9 +8,15 @@ frontend/.turbo/
 # Editor settings
 .vscode/
 
+# Environment files
+.env
+.env.*
+backend/.env
+frontend/.env.local
+frontend/.env.*
+
 # Logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 pnpm-debug.log*
-

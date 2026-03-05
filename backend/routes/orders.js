@@ -7,6 +7,7 @@ const ORDER_API_BASE =
   process.env.ORDER_API_BASE || "https://p511.eontyre.com/api/v2/orders";
 const WEBSHOP_ID = process.env.WEBSHOP_ID || "38";
 const API_KEY = process.env.API_KEY || "";
+const INTERNAL_API_TOKEN = process.env.INTERNAL_API_TOKEN;
 
 function getAuthHeaders() {
   return {
@@ -18,6 +19,16 @@ function getAuthHeaders() {
     "api-key": API_KEY,
   };
 }
+
+// Optional simple auth for server-to-server calls
+router.use((req, res, next) => {
+  if (!INTERNAL_API_TOKEN) return next(); // disabled when not set
+
+  const token = req.headers["x-internal-token"];
+  if (token === INTERNAL_API_TOKEN) return next();
+
+  return res.status(401).json({ error: "Unauthorized" });
+});
 
 router.post("/", async (req, res) => {
   try {

@@ -3,17 +3,31 @@ require("dotenv").config({ path: path.join(__dirname, ".env") });
 const express = require("express");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
+const compression = require("compression");
+const morgan = require("morgan");
 const productsRouter = require("./routes/products");
 const ordersRouter = require("./routes/orders");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
+const NODE_ENV = process.env.NODE_ENV || "development";
+
+// Basic runtime guard for required secrets
+if (!process.env.API_KEY) {
+  console.warn("[startup] API_KEY is missing; API requests will fail");
+}
+
+// Trust proxy for accurate IPs behind reverse proxies (nginx/traefik)
+app.set("trust proxy", 1);
 
 // Middleware
-app.use(express.json());
+app.use(helmet());
+app.use(compression());
+app.use(morgan(NODE_ENV === "production" ? "combined" : "dev"));
+app.use(express.json({ limit: "1mb" }));
 
-// CORS — allow localhost, local network IPs (192.168.x.x, 10.x.x.x), and any
-// origins listed in FRONTEND_URL (comma-separated)
+// CORS — lock to configured origins; allow localhost in non-production
 const allowedOrigins = (process.env.FRONTEND_URL || "")
   .split(",")
   .map((o) => o.trim())
@@ -22,33 +36,29 @@ const allowedOrigins = (process.env.FRONTEND_URL || "")
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (curl, Postman, server-to-server)
-      if (!origin) return callback(null, true);
+      if (!origin) return callback(null, true); // curl/server-to-server
 
-      // Explicit whitelist from env
-      if (allowedOrigins.includes(origin)) return callback(null, true);
+      const isWhitelisted = allowedOrigins.includes(origin);
+      const isLocalDev =
+        NODE_ENV !== "production" &&
+        (/^http:\/\/localhost(:\d+)?$/.test(origin) ||
+          /^http:\/\/127\.0\.0\.1(:\d+)?$/.test(origin));
 
-      // Allow any localhost or local network origin (dev convenience)
-      const isLocal =
-        /^http:\/\/localhost(:\d+)?$/.test(origin) ||
-        /^http:\/\/127\.0\.0\.1(:\d+)?$/.test(origin) ||
-        /^http:\/\/192\.168\.\d{1,3}\.\d{1,3}(:\d+)?$/.test(origin) ||
-        /^http:\/\/10\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?$/.test(origin) ||
-        /^http:\/\/172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}(:\d+)?$/.test(origin);
-
-      if (isLocal) return callback(null, true);
+      if (isWhitelisted || isLocalDev) return callback(null, true);
 
       console.warn(`[CORS] Blocked origin: ${origin}`);
-      callback(new Error(`CORS policy: origin ${origin} not allowed`));
+      return callback(new Error(`CORS policy: origin ${origin} not allowed`));
     },
     credentials: true,
   })
 );
 
-// Rate limiting
+// Rate limiting (per IP)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 200,
+  standardHeaders: true,
+  legacyHeaders: false,
   message: { error: "Too many requests, please try again later." },
 });
 app.use("/api", limiter);
@@ -70,7 +80,9 @@ app.use((req, res) => {
 // Error handler
 app.use((err, req, res, next) => {
   console.error("Server error:", err.message);
-  res.status(500).json({ error: "Internal server error", detail: err.message });
+  res
+    .status(500)
+    .json({ error: "Internal server error", detail: err.message || "unknown" });
 });
 
 app.listen(PORT, () => {
