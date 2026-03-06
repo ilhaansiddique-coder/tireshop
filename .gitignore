@@ -4,6 +4,10 @@ node_modules/
 # Next.js build output and cache
 frontend/.next/
 frontend/.turbo/
+frontendClaude/.next/
+frontendClaude/.turbo/
+.netlify/
+frontendClaude/.netlify/
 
 # Editor settings
 .vscode/
@@ -14,6 +18,8 @@ frontend/.turbo/
 backend/.env
 frontend/.env.local
 frontend/.env.*
+frontendClaude/.env.local
+frontendClaude/.env.*
 
 # Logs
 *.log
