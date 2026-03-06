@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[22016,["/_next/static/chunks/80ba8611e9afa2f9.js","/_next/static/chunks/98abace4df2fefe2.js"],""]
+3:I[97367,["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/d2be314c3ece3fbe.js"],"OutletBoundary"]
+4:"$Sreact.suspense"
+0:{"buildId":"Lrl35aEMRJbCdT7s0Fece","rsc":["$","$1","c",{"children":[["$","section",null,{"className":"mx-auto flex min-h-[55vh] w-full max-w-[1400px] items-center px-4 py-20 sm:px-6","children":["$","div",null,{"className":"max-w-3xl","children":[["$","p",null,{"className":"mb-4 text-xs font-semibold uppercase tracking-[0.28em] text-brand-yellow","children":"TireStore"}],["$","h1",null,{"className":"font-display text-5xl font-bold uppercase leading-none tracking-wide text-brand-text sm:text-6xl","children":"DC Wheels"}],["$","p",null,{"className":"mt-5 max-w-xl text-base text-brand-muted sm:text-lg","children":"Dedicated DC Wheels section for campaign products, special inventory, or partner catalog data."}],["$","$L2",null,{"href":"/","className":"mt-8 inline-flex rounded-lg bg-brand-yellow px-5 py-3 text-sm font-bold uppercase tracking-wide text-brand-dark hover:bg-brand-amber","children":"Browse Deck"}]]}]}],null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"loading":null,"isPartial":false}
+5:null

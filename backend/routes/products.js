@@ -3,8 +3,95 @@ const axios = require("axios");
 const router = express.Router();
 
 const TIRE_API_BASE = "https://p511.eontyre.com/api/webshop/products";
+const COMPLETE_WHEELS_API_BASE =
+  "https://p511.eontyre.com/api/v2/products/export/complete-wheels";
 const WEBSHOP_ID = process.env.WEBSHOP_ID || "38";
 const API_KEY = process.env.API_KEY || "";
+
+function toPositiveInt(value, fallback) {
+  const n = Number(value);
+  return Number.isFinite(n) && n > 0 ? Math.floor(n) : fallback;
+}
+
+function buildCompleteWheelImageUrl(image) {
+  if (!image?.image_id || !image?.filetype) return null;
+  return `https://api.eontyre.com/images/${image.image_id}/big.${image.filetype}`;
+}
+
+function normaliseCompleteWheel(item) {
+  const productId = Number(item?.product_id);
+  const locationId = Number(item?.location_id);
+  const supplierId = Number(item?.supplier_id);
+
+  const safeProductId = Number.isFinite(productId) ? productId : 0;
+  const safeLocationId = Number.isFinite(locationId) ? locationId : 0;
+  const safeSupplierId = Number.isFinite(supplierId) ? supplierId : 0;
+
+  const compositeId = `${safeProductId}:${safeLocationId}:${safeSupplierId}`;
+
+  const images = Array.isArray(item?.images)
+    ? item.images
+        .map((image) => {
+          const url = buildCompleteWheelImageUrl(image);
+          return url ? { ...image, url } : null;
+        })
+        .filter(Boolean)
+    : [];
+
+  const tyreBrand = item?.tyre_brand_name || "";
+  const rimBrand = item?.rim_brand_name || "";
+  const title =
+    item?.description ||
+    [tyreBrand, item?.tyre_model_name, rimBrand, item?.rim_model_name]
+      .filter(Boolean)
+      .join(" ");
+
+  return {
+    ...item,
+    id: compositeId,
+    productId: safeProductId || null,
+    orderProductId: safeProductId || null,
+    orderSupplierId: safeSupplierId || null,
+    orderLocationId: safeLocationId || null,
+    name: title || "Complete wheel",
+    brand: rimBrand || tyreBrand || item?.product_type_name || "Complete wheel",
+    stock: item?.stock ?? 0,
+    price: item?.price ?? null,
+    width: item?.width ?? null,
+    aspectRatio: item?.aspect_ratio ?? null,
+    diameter: item?.diameter ?? null,
+    images,
+    imageUrl: images[0]?.url || null,
+  };
+}
+
+function matchesCompleteWheelQuery(item, query) {
+  if (!query) return true;
+  const q = query.toLowerCase();
+
+  const textParts = [
+    item?.description,
+    item?.supplier_description,
+    item?.tyre_brand_name,
+    item?.tyre_model_name,
+    item?.rim_brand_name,
+    item?.rim_model_name,
+    item?.product_type_name,
+    item?.vehicle_type_name,
+    item?.rim_type_name,
+    item?.supplier_name,
+    item?.location_name,
+    item?.supplier_product_id,
+    item?.product_id,
+    item?.ean,
+  ];
+
+  return textParts.some((part) =>
+    String(part ?? "")
+      .toLowerCase()
+      .includes(q)
+  );
+}
 
 // Build query params from request, applying defaults
 function buildApiParams(query) {
@@ -63,6 +150,78 @@ function buildApiParams(query) {
 
   return params;
 }
+
+// GET /api/products/complete-wheels — list complete wheels using export endpoint
+router.get("/complete-wheels", async (req, res) => {
+  try {
+    if (!API_KEY) {
+      return res.status(500).json({ error: "Server missing API_KEY" });
+    }
+
+    const page = toPositiveInt(req.query.page, 1);
+    const limit = toPositiveInt(req.query.limit, 24);
+    const query = typeof req.query.query === "string" ? req.query.query.trim() : "";
+    const minQuantityInStock = toPositiveInt(req.query.minQuantityInStock, 1);
+
+    const params = new URLSearchParams();
+    params.set("webshop_id", String(req.query.webshop_id || WEBSHOP_ID));
+    params.set("minQuantityInStock", String(minQuantityInStock));
+    if (req.query.customer_id) params.set("customer_id", String(req.query.customer_id));
+
+    const url = `${COMPLETE_WHEELS_API_BASE}?${params.toString()}`;
+    console.log(`[Complete Wheels] Fetching: ${url}`);
+
+    const response = await axios.get(url, {
+      timeout: 25000,
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "TireStore/1.0",
+        "Api-Key": API_KEY,
+        "api-key": API_KEY,
+      },
+    });
+
+    const upstream = response.data || {};
+    const source = Array.isArray(upstream?.data) ? upstream.data : [];
+    const filtered = source.filter((item) => matchesCompleteWheelQuery(item, query));
+    const count = filtered.length;
+
+    const start = (page - 1) * limit;
+    const items = filtered.slice(start, start + limit).map(normaliseCompleteWheel);
+
+    return res.json({
+      err: upstream?.err || null,
+      count,
+      page,
+      limit,
+      data: {
+        products: items,
+      },
+    });
+  } catch (err) {
+    if (err.response) {
+      console.error(
+        "[Complete Wheels] API error:",
+        err.response.status,
+        err.response.data
+      );
+      return res.status(err.response.status).json({
+        error: "Upstream complete-wheels API error",
+        detail: err.response.data,
+      });
+    }
+
+    if (err.code === "ECONNABORTED") {
+      return res.status(504).json({ error: "Request to complete-wheels API timed out" });
+    }
+
+    console.error("[Complete Wheels] Network error:", err.message);
+    return res.status(502).json({
+      error: "Could not reach complete-wheels API",
+      detail: err.message,
+    });
+  }
+});
 
 // GET /api/products — fetch tire listings
 router.get("/", async (req, res) => {

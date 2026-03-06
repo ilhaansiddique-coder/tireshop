@@ -33,6 +33,36 @@ const allowedOrigins = (process.env.FRONTEND_URL || "")
   .map((o) => o.trim())
   .filter(Boolean);
 
+// Allow typical private-network origins during local dev (helps when testing from LAN IP)
+const lanOriginRegex =
+  /^http:\/\/(?:10(?:\.\d{1,3}){3}|192\.168(?:\.\d{1,3}){2}|172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2})(?::\d+)?$/;
+
+// Allow nip.io style hostnames that resolve to private IPs (e.g., 192-168-0-127.nip.io)
+const nipOriginRegex = /^https?:\/\/(\d{1,3}-){3}\d{1,3}\.nip\.io(?::\d+)?$/;
+
+// Allow Cloudflare quick tunnels (*.trycloudflare.com) for ad-hoc remote previews
+const tryCloudflareRegex = /^https?:\/\/[a-z0-9-]+\.trycloudflare\.com(?::\d+)?$/;
+
+function isPrivateIp(ip) {
+  const octets = ip.split(".").map((n) => Number(n));
+  if (octets.some((n) => Number.isNaN(n) || n < 0 || n > 255)) return false;
+  const [a, b] = octets;
+  if (a === 10) return true;
+  if (a === 172 && b >= 16 && b <= 31) return true;
+  if (a === 192 && b === 168) return true;
+  return false;
+}
+function isLanNipOrigin(origin) {
+  try {
+    const url = new URL(origin);
+    if (!nipOriginRegex.test(origin)) return false;
+    const ip = url.hostname.replace(/-/g, ".").replace(".nip.io", "");
+    return isPrivateIp(ip);
+  } catch {
+    return false;
+  }
+}
+
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -42,7 +72,10 @@ app.use(
       const isLocalDev =
         NODE_ENV !== "production" &&
         (/^http:\/\/localhost(:\d+)?$/.test(origin) ||
-          /^http:\/\/127\.0\.0\.1(:\d+)?$/.test(origin));
+          /^http:\/\/127\.0\.0\.1(:\d+)?$/.test(origin) ||
+          lanOriginRegex.test(origin) ||
+          isLanNipOrigin(origin) ||
+          tryCloudflareRegex.test(origin));
 
       if (isWhitelisted || isLocalDev) return callback(null, true);
 
@@ -85,6 +118,18 @@ app.use((err, req, res, next) => {
     .json({ error: "Internal server error", detail: err.message || "unknown" });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 TireStore backend running on http://localhost:${PORT}`);
+const server = app.listen(PORT, () => {
+  console.log(`TireStore backend running on http://localhost:${PORT}`);
+});
+
+server.on("error", (err) => {
+  if (err?.code === "EADDRINUSE") {
+    console.error(
+      `[startup] Port ${PORT} is already in use. Stop the existing process or set a different PORT in backend/.env.`
+    );
+    process.exit(1);
+  }
+
+  console.error("[startup] Failed to start server:", err);
+  process.exit(1);
 });

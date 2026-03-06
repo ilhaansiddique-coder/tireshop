@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   devIndicators: false,
+  // Allow LAN/dev proxy origins to fetch internal /_next resources in development.
+  allowedDevOrigins: ["192.168.0.127", "127.0.0.1"],
   images: {
     remotePatterns: [
       {
@@ -16,9 +18,6 @@ const nextConfig = {
         hostname: "*.eontyre.com",
       },
     ],
-  },
-  env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000",
   },
 };
 

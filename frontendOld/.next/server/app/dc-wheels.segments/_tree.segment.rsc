@@ -1,0 +1,2 @@
+:HL["/_next/static/chunks/639a2433b58511c9.css","style"]
+0:{"buildId":"Lrl35aEMRJbCdT7s0Fece","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"dc-wheels","paramType":null,"paramKey":"dc-wheels","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}

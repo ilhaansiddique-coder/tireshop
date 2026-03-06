@@ -1,0 +1,15 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/tyres/layout,_N_T_/tyres/page,_N_T_/tyres"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/tyres/__PAGE__",
+    "/tyres",
+    "/_index",
+    "/_head"
+  ]
+}

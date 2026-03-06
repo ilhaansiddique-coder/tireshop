@@ -20,3 +20,119 @@
 [Products] Fetching: https://p511.eontyre.com/api/webshop/products?webshopId=38&version=2&typeId=1&tyreType=2&vehicleType=alla&searchMode=4&showNoimageRims=1&showNoimageTyres=1&limit=24&page=1&minQuantityInStock=4&minimumTestScore=0&loadIndex=0&loadIndexRear=0&isElectricVehicle=false&isEnforced=false&isMCVehicleType=false&isRunflat=false&isSilence=false&isStaggeredFitment=false&diameter=15&includeLocations%5B%5D=1048 | key set: yes
 [Products] Fetching: https://p511.eontyre.com/api/webshop/products?webshopId=38&version=2&typeId=1&tyreType=2&vehicleType=alla&searchMode=4&showNoimageRims=1&showNoimageTyres=1&limit=24&page=1&minQuantityInStock=4&minimumTestScore=0&loadIndex=0&loadIndexRear=0&isElectricVehicle=false&isEnforced=false&isMCVehicleType=false&isRunflat=false&isSilence=false&isStaggeredFitment=false&diameter=15&includeLocations%5B%5D=1048 | key set: yes
 [31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+node:internal/modules/cjs/loader:1459
+  throw err;
+  ^
+
+Error: Cannot find module 'helmet'
+Require stack:
+- D:\Development\tirestore\backend\server.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1456:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1066:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1071:22)
+    at Module._load (node:internal/modules/cjs/loader:1242:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1556:12)
+    at require (node:internal/modules/helpers:152:16)
+    at Object.<anonymous> (D:\Development\tirestore\backend\server.js:6:16)
+    at Module._compile (node:internal/modules/cjs/loader:1812:14)
+    at Object..js (node:internal/modules/cjs/loader:1943:10) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ 'D:\\Development\\tirestore\\backend\\server.js' ]
+}
+
+Node.js v24.14.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+node:internal/modules/cjs/loader:1459
+  throw err;
+  ^
+
+Error: Cannot find module 'helmet'
+Require stack:
+- D:\Development\tirestore\backend\server.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1456:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1066:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1071:22)
+    at Module._load (node:internal/modules/cjs/loader:1242:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1556:12)
+    at require (node:internal/modules/helpers:152:16)
+    at Object.<anonymous> (D:\Development\tirestore\backend\server.js:6:16)
+    at Module._compile (node:internal/modules/cjs/loader:1812:14)
+    at Object..js (node:internal/modules/cjs/loader:1943:10) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ 'D:\\Development\\tirestore\\backend\\server.js' ]
+}
+
+Node.js v24.14.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+node:internal/modules/cjs/loader:1459
+  throw err;
+  ^
+
+Error: Cannot find module 'helmet'
+Require stack:
+- D:\Development\tirestore\backend\server.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1456:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1066:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1071:22)
+    at Module._load (node:internal/modules/cjs/loader:1242:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1556:12)
+    at require (node:internal/modules/helpers:152:16)
+    at Object.<anonymous> (D:\Development\tirestore\backend\server.js:6:16)
+    at Module._compile (node:internal/modules/cjs/loader:1812:14)
+    at Object..js (node:internal/modules/cjs/loader:1943:10) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ 'D:\\Development\\tirestore\\backend\\server.js' ]
+}
+
+Node.js v24.14.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+node:internal/modules/cjs/loader:1459
+  throw err;
+  ^
+
+Error: Cannot find module 'helmet'
+Require stack:
+- D:\Development\tirestore\backend\server.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1456:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1066:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1071:22)
+    at Module._load (node:internal/modules/cjs/loader:1242:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1556:12)
+    at require (node:internal/modules/helpers:152:16)
+    at Object.<anonymous> (D:\Development\tirestore\backend\server.js:6:16)
+    at Module._compile (node:internal/modules/cjs/loader:1812:14)
+    at Object..js (node:internal/modules/cjs/loader:1943:10) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ 'D:\\Development\\tirestore\\backend\\server.js' ]
+}
+
+Node.js v24.14.0
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js`[39m
+🚀 TireStore backend running on http://localhost:4000
+[CORS] Blocked origin: http://192.168.0.127:3000
+Server error: CORS policy: origin http://192.168.0.127:3000 not allowed
+[0mGET /api/products?page=1&limit=24&typeId=1&tyreType=2&vehicleType=alla&searchMode=4&showNoimageRims=1&showNoimageTyres=1&minQuantityInStock=4&minimumTestScore=0&loadIndex=0&loadIndexRear=0&isElectricVehicle=false&isEnforced=false&isMCVehicleType=false&isRunflat=false&isSilence=false&isStaggeredFitment=false&sortBy=default&includeLocations%5B%5D=1048 [31m500[0m 1.615 ms - 102[0m
+[CORS] Blocked origin: http://192.168.0.127:3000
+Server error: CORS policy: origin http://192.168.0.127:3000 not allowed
+[0mGET /api/products?page=1&limit=24&typeId=1&tyreType=2&vehicleType=alla&searchMode=4&showNoimageRims=1&showNoimageTyres=1&minQuantityInStock=4&minimumTestScore=0&loadIndex=0&loadIndexRear=0&isElectricVehicle=false&isEnforced=false&isMCVehicleType=false&isRunflat=false&isSilence=false&isStaggeredFitment=false&sortBy=default&includeLocations%5B%5D=1048 [31m500[0m 0.367 ms - 102[0m
+[CORS] Blocked origin: http://192.168.0.127:3000
+Server error: CORS policy: origin http://192.168.0.127:3000 not allowed
+[0mGET /api/products?page=1&limit=24&typeId=1&tyreType=2&vehicleType=alla&searchMode=4&showNoimageRims=1&showNoimageTyres=1&minQuantityInStock=4&minimumTestScore=0&loadIndex=0&loadIndexRear=0&isElectricVehicle=false&isEnforced=false&isMCVehicleType=false&isRunflat=false&isSilence=false&isStaggeredFitment=false&sortBy=default&includeLocations%5B%5D=1048 [31m500[0m 0.320 ms - 102[0m
+[CORS] Blocked origin: http://192.168.0.127:3000
+Server error: CORS policy: origin http://192.168.0.127:3000 not allowed
+[0mGET /api/products?page=1&limit=24&typeId=1&tyreType=2&vehicleType=alla&searchMode=4&showNoimageRims=1&showNoimageTyres=1&minQuantityInStock=4&minimumTestScore=0&loadIndex=0&loadIndexRear=0&isElectricVehicle=false&isEnforced=false&isMCVehicleType=false&isRunflat=false&isSilence=false&isStaggeredFitment=false&sortBy=default&includeLocations%5B%5D=1048 [31m500[0m 0.273 ms - 102[0m
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m

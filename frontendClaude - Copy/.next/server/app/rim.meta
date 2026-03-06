@@ -1,0 +1,15 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/rim/layout,_N_T_/rim/page,_N_T_/rim"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/rim/__PAGE__",
+    "/rim",
+    "/_index",
+    "/_head"
+  ]
+}

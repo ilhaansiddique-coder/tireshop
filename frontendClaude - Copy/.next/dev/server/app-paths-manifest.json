@@ -1,0 +1,7 @@
+{
+  "/api/products/route": "app/api/products/route.js",
+  "/page": "app/page.js",
+  "/tyres/page": "app/tyres/page.js",
+  "/tyres/[id]/page": "app/tyres/[id]/page.js",
+  "/book/page": "app/book/page.js"
+}

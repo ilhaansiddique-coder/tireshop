@@ -1,0 +1,15 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/wheel-alignment/layout,_N_T_/wheel-alignment/page,_N_T_/wheel-alignment"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/wheel-alignment/__PAGE__",
+    "/wheel-alignment",
+    "/_index",
+    "/_head"
+  ]
+}

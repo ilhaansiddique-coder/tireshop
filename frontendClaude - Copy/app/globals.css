@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'DM Sans', sans-serif;
+    scroll-behavior: smooth;
+  }
+
+  /* Thin scrollbar */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: oklch(var(--bc) / 0.2); border-radius: 9999px; }
+  ::-webkit-scrollbar-thumb:hover { background: oklch(var(--bc) / 0.4); }
+}
+
+@layer components {
+  /* Brand heading style */
+  .heading-display {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    line-height: 0.95;
+  }
+
+  /* Skeleton shimmer */
+  .skeleton-shimmer {
+    background: linear-gradient(
+      90deg,
+      oklch(var(--b2)) 25%,
+      oklch(var(--b3)) 50%,
+      oklch(var(--b2)) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  /* Season badge colors */
+  .badge-summer { @apply badge badge-warning; }
+  .badge-winter { @apply badge badge-info; }
+  .badge-allseason { @apply badge badge-success; }
+
+  /* Card hover ring */
+  .card-hover {
+    @apply transition-all duration-300 hover:ring-2 hover:ring-brand-yellow hover:ring-offset-1 hover:ring-offset-base-100;
+  }
+
+  /* Gold accent text */
+  .text-gold { color: #F5C518; }
+
+  /* Stagger animation helpers */
+  .anim-delay-1 { animation-delay: 0.1s; }
+  .anim-delay-2 { animation-delay: 0.2s; }
+  .anim-delay-3 { animation-delay: 0.3s; }
+  .anim-delay-4 { animation-delay: 0.4s; }
+}
