@@ -1,0 +1,8 @@
+{
+  "name": "tirestore-monorepo",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontendClaude"
+  ]
+}
