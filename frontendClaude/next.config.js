@@ -1,7 +1,10 @@
+const path = require("path");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   turbopack: {
-    root: __dirname,
+    // next is hoisted to monorepo root node_modules
+    root: path.resolve(__dirname, ".."),
   },
   devIndicators: {
     buildActivity: false,

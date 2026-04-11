@@ -16,50 +16,81 @@ export default function ProductCard({ product, index = 0, linkToDetail = true })
   if (!product) return null;
 
   const attrs = product?.attrs || {};
+
+  // ── Brand: handle search API (brand.name) + export API (brand_name) ──
   const brand =
     typeof product?.brand === "string"
       ? product.brand
-      : product?.brand?.name || product?.brandName || "-";
+      : product?.brand?.name ||
+        product?.brandName ||
+        product?.brand_name ||
+        product?.tyre_brand_name ||
+        product?.rim_brand_name ||
+        "-";
+
+  // ── Name/Model: handle search API (name) + export API (description) ──
   const name =
     product?.name ||
     product?.productName ||
+    product?.description ||
     product?.model?.name ||
-    product?.model ||
-    "Unnamed Tyre";
+    product?.model_name ||
+    product?.tyre_model_name ||
+    product?.rim_model_name ||
+    (typeof product?.model === "string" ? product.model : null) ||
+    "Product";
 
+  // ── Dimensions ──
   const width = product?.width || attrs?.width;
-  const aspectRatio = product?.aspectRatio || attrs?.aspectRatio;
+  const aspectRatio = product?.aspectRatio || product?.aspect_ratio || attrs?.aspectRatio;
   const diameter = product?.diameter || attrs?.diameter;
-  const loadIndex = product?.loadIndex || attrs?.loadIndex;
-  const speedIndex = product?.speedIndex || attrs?.speedIndex;
+  const loadIndex = product?.loadIndex || product?.tyre_load_index || attrs?.loadIndex;
+  const speedIndex = product?.speedIndex || product?.tyre_speed_index || attrs?.speedIndex;
 
+  // ── Stock ──
   const stock = product?.quantityInStock ?? product?.stock ?? product?.stockQuantity;
-  const productId = product?.id || product?.productId;
+
+  // ── IDs for cart/ordering ──
+  const productId = product?.id || product?.productId || product?.product_id;
   const orderProductId =
     toNumber(product?.orderProductId) ??
     toNumber(product?.product_id) ??
     toNumber(product?.productId);
-  const orderSupplierId = toNumber(product?.orderSupplierId) ?? toNumber(product?.supplier_id);
-  const orderLocationId = toNumber(product?.orderLocationId) ?? toNumber(product?.location_id);
+  const orderSupplierId =
+    toNumber(product?.orderSupplierId) ??
+    toNumber(product?.supplier?.id) ??
+    toNumber(product?.supplier_id);
+  const orderLocationId =
+    toNumber(product?.orderLocationId) ??
+    toNumber(product?.location?.id) ??
+    toNumber(product?.location_id);
   const cartItemId =
     orderProductId !== null
       ? `${orderProductId}:${orderLocationId ?? 0}:${orderSupplierId ?? 0}`
       : String(productId || `tmp-${index}`);
 
+  // ── Season ──
   const seasonType =
     product?.tyreType ||
+    product?.tyre_type_id ||
     product?.season ||
     attrs?.tyreType?.id ||
     attrs?.compoundType?.id;
 
+  // ── EU Label ──
   const euLabel = product?.euLabel || {
-    rollingResistance: product?.rollingResistance || attrs?.rollingResistance,
-    wetGrip: product?.wetGrip || attrs?.wetGrip,
-    noiseEmissionDecibel: product?.noiseEmissionDecibel || attrs?.noiseDecibel,
+    rollingResistance:
+      product?.rollingResistance || product?.tyre_rolling_resistance || attrs?.rollingResistance,
+    wetGrip: product?.wetGrip || product?.tyre_wet_grip || attrs?.wetGrip,
+    noiseEmissionDecibel:
+      product?.noiseEmissionDecibel || product?.tyre_noise_emission_decibel || attrs?.noiseDecibel,
   };
 
+  // ── Image ──
   const imgUrl = productImageUrl(product);
-  const price =
+
+  // ── Price (in öre from API) ──
+  const priceOre =
     product?.price ??
     product?.consumerPrice ??
     product?.priceExVat ??
@@ -67,11 +98,12 @@ export default function ProductCard({ product, index = 0, linkToDetail = true })
 
   function handleAdd(e) {
     e.preventDefault();
+    e.stopPropagation();
     addItem({
       id: cartItemId,
       name,
       brand,
-      price,
+      price: priceOre, // store in öre, convert on display
       imageUrl: imgUrl,
       width,
       aspectRatio,
@@ -93,7 +125,7 @@ export default function ProductCard({ product, index = 0, linkToDetail = true })
         {imgUrl ? (
           <Image
             src={imgUrl}
-            alt={name || "Tyre"}
+            alt={name || "Product"}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className="object-contain p-6 transition-transform duration-500 group-hover:scale-105"
@@ -171,7 +203,7 @@ export default function ProductCard({ product, index = 0, linkToDetail = true })
         <div className="card-actions justify-between items-center mt-3 pt-3 border-t border-base-300">
           <div>
             <p className="font-display text-xl font-black text-gold leading-none">
-              {formatPrice(price)}
+              {formatPrice(priceOre)}
             </p>
             <p className="text-[10px] text-base-content/40">excl. VAT</p>
           </div>

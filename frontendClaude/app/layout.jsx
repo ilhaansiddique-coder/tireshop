@@ -1,4 +1,5 @@
 import "./globals.css";
+import Script from "next/script";
 import Navbar from "@/components/Navbar";
 import CartDrawer from "@/components/CartDrawer";
 
@@ -13,21 +14,13 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        {/* Inject theme before React hydrates to prevent flash */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                var t = localStorage.getItem('theme') || 'dark';
-                document.documentElement.setAttribute('data-theme', t);
-              } catch(e) {}
-            `,
-          }}
-        />
-      </head>
-      <body className="font-body min-h-screen bg-base-100 text-base-content antialiased">
+    <html lang="en" data-scroll-behavior="smooth" data-theme="dark" suppressHydrationWarning>
+      <head />
+      <body className="font-body min-h-screen bg-base-100 text-base-content antialiased" suppressHydrationWarning>
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
+        >{`try{var t=localStorage.getItem('theme')||'dark';document.documentElement.setAttribute('data-theme',t)}catch(e){}`}</Script>
         <Navbar />
         <main className="pt-[60px]">{children}</main>
         <CartDrawer />

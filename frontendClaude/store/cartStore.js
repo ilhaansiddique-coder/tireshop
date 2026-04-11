@@ -41,7 +41,7 @@ const useCartStore = create(
 
       clearCart: () => set({ items: [] }),
 
-      // Derived
+      // Methods (used by cart page, navbar)
       itemCount: () => get().items.reduce((sum, i) => sum + i.qty, 0),
       subtotal: () =>
         get().items.reduce((sum, i) => sum + (i.price || 0) * i.qty, 0),

@@ -1,6 +1,6 @@
 var R=require("../../../../chunks/[turbopack]_runtime.js")("server/app/api/products/complete-wheels/route.js")
-R.c("server/chunks/[root-of-the-server]__7a2d120f._.js")
-R.c("server/chunks/[root-of-the-server]__55762a50._.js")
-R.c("server/chunks/8bce3__next-internal_server_app_api_products_complete-wheels_route_actions_557f669f.js")
-R.m(15177)
-module.exports=R.m(15177).exports
+R.c("server/chunks/[root-of-the-server]__0n~ohb4._.js")
+R.c("server/chunks/[root-of-the-server]__0op9af~._.js")
+R.c("server/chunks/0o0t__next-internal_server_app_api_products_complete-wheels_route_actions_0erlgse.js")
+R.m(45285)
+module.exports=R.m(45285).exports

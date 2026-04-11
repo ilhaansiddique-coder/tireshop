@@ -8,6 +8,14 @@ const compression = require("compression");
 const morgan = require("morgan");
 const productsRouter = require("./routes/products");
 const ordersRouter = require("./routes/orders");
+const stockRouter = require("./routes/stock");
+const brandsRouter = require("./routes/brands");
+const pricesRouter = require("./routes/prices");
+const vehiclesRouter = require("./routes/vehicles");
+const garagesRouter = require("./routes/garages");
+const tyrehotelsRouter = require("./routes/tyrehotels");
+const invoicesRouter = require("./routes/invoices");
+const treaddepthRouter = require("./routes/treaddepth");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -99,6 +107,14 @@ app.use("/api", limiter);
 // Routes
 app.use("/api/products", productsRouter);
 app.use("/api/orders", ordersRouter);
+app.use("/api/stock", stockRouter);
+app.use("/api/brands", brandsRouter);
+app.use("/api/prices", pricesRouter);
+app.use("/api/vehicles", vehiclesRouter);
+app.use("/api/garages", garagesRouter);
+app.use("/api/tyrehotels", tyrehotelsRouter);
+app.use("/api/invoices", invoicesRouter);
+app.use("/api/treaddepth", treaddepthRouter);
 
 // Health check
 app.get("/health", (req, res) => {

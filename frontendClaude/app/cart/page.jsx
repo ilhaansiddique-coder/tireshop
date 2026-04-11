@@ -92,13 +92,12 @@ export default function CartPage() {
         customer: {
           type: 2,
           name: `${form.firstName} ${form.lastName}`.trim(),
-          email: form.email || undefined,
+          email: form.email,
           phone: form.phone,
           address1: form.address || undefined,
           postal_code: form.postalCode,
           city: form.city,
           country: (form.country || "SE").toUpperCase(),
-          update: true,
         },
         products,
         delivery_option: 0,
@@ -225,7 +224,7 @@ export default function CartPage() {
                     {/* Price + delete */}
                     <div className="text-right flex-shrink-0">
                       <p className="font-display font-black text-lg text-brand-yellow">{formatPrice(item.price * item.qty)}</p>
-                      <p className="text-[10px] text-base-content/30">{formatPrice(item.price)} each</p>
+                      <p className="text-[10px] text-base-content/30">{formatPrice(item.price)} / each</p>
                     </div>
                     <button className="btn btn-ghost btn-sm text-error" onClick={() => removeItem(item.id)}>
                       <Trash2 size={15} />
@@ -248,7 +247,7 @@ export default function CartPage() {
                 </div>
                 <div className="flex justify-between text-sm font-body">
                   <span className="text-base-content/60">VAT (25%)</span>
-                  <span className="font-semibold">{formatPrice(sub * 0.25)}</span>
+                  <span className="font-semibold">{formatPrice(Math.round(sub * 0.25))}</span>
                 </div>
                 <div className="flex justify-between text-sm font-body">
                   <span className="text-base-content/60">Shipping</span>
@@ -257,7 +256,7 @@ export default function CartPage() {
                 <div className="divider my-1" />
                 <div className="flex justify-between items-baseline">
                   <span className="font-body text-sm text-base-content/60">Total incl. VAT</span>
-                  <span className="heading-display text-2xl text-brand-yellow">{formatPrice(sub * 1.25)}</span>
+                  <span className="heading-display text-2xl text-brand-yellow">{formatPrice(Math.round(sub * 1.25))}</span>
                 </div>
               </div>
             </div>

@@ -15,6 +15,7 @@
     }
   ],
   "headers": [],
+  "onMatchHeaders": [],
   "rewrites": {
     "beforeFiles": [],
     "afterFiles": [],
@@ -36,6 +37,46 @@
         "nxtPid": "nxtPid"
       },
       "namedRegex": "^/api/products/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/tyrehotels/car/[licenseplate]",
+      "regex": "^/api/tyrehotels/car/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPlicenseplate": "nxtPlicenseplate"
+      },
+      "namedRegex": "^/api/tyrehotels/car/(?<nxtPlicenseplate>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/tyrehotels/[id]",
+      "regex": "^/api/tyrehotels/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/tyrehotels/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/vehicles/[platenumber]",
+      "regex": "^/api/vehicles/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPplatenumber": "nxtPplatenumber"
+      },
+      "namedRegex": "^/api/vehicles/(?<nxtPplatenumber>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/complete-wheels/[id]",
+      "regex": "^/complete\\-wheels/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/complete\\-wheels/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/rim/[id]",
+      "regex": "^/rim/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/rim/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
       "page": "/tyres/[id]",
@@ -66,10 +107,28 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
+      "page": "/api/brands",
+      "regex": "^/api/brands(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/brands(?:/)?$"
+    },
+    {
+      "page": "/api/garages",
+      "regex": "^/api/garages(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/garages(?:/)?$"
+    },
+    {
       "page": "/api/orders",
       "regex": "^/api/orders(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/orders(?:/)?$"
+    },
+    {
+      "page": "/api/orders/list",
+      "regex": "^/api/orders/list(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/orders/list(?:/)?$"
     },
     {
       "page": "/api/products",
@@ -82,6 +141,36 @@
       "regex": "^/api/products/complete\\-wheels(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/products/complete\\-wheels(?:/)?$"
+    },
+    {
+      "page": "/api/products/extras",
+      "regex": "^/api/products/extras(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/products/extras(?:/)?$"
+    },
+    {
+      "page": "/api/products/rims-export",
+      "regex": "^/api/products/rims\\-export(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/products/rims\\-export(?:/)?$"
+    },
+    {
+      "page": "/api/products/tyres-export",
+      "regex": "^/api/products/tyres\\-export(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/products/tyres\\-export(?:/)?$"
+    },
+    {
+      "page": "/api/stock",
+      "regex": "^/api/stock(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/stock(?:/)?$"
+    },
+    {
+      "page": "/api/stock/locations",
+      "regex": "^/api/stock/locations(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/stock/locations(?:/)?$"
     },
     {
       "page": "/book",
@@ -130,6 +219,12 @@
       "regex": "^/login(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/login(?:/)?$"
+    },
+    {
+      "page": "/orders",
+      "regex": "^/orders(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/orders(?:/)?$"
     },
     {
       "page": "/rim",

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ShoppingCart, Menu, X, Wrench } from "lucide-react";
@@ -7,12 +7,12 @@ import useCartStore from "@/store/cartStore";
 import ThemePicker from "./ThemePicker";
 
 const NAV_LINKS = [
-  { href: "/", label: "Tyres" },
+  { href: "/tyres", label: "Tyres" },
   { href: "/rim", label: "Rims" },
   { href: "/complete-wheels", label: "Complete Wheels" },
   { href: "/deck-hotel", label: "Deck Hotel" },
+  { href: "/orders", label: "Orders" },
   { href: "/book?service=alignment", label: "Wheel Alignment" },
-  { href: "/book?service=rim",   label: "Rim Renovation" },
 ];
 
 export default function Navbar() {
@@ -20,8 +20,14 @@ export default function Navbar() {
   const { openCart, itemCount } = useCartStore();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  const count = itemCount();
+  // Defer cart count to after hydration to avoid SSR/client mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const count = mounted ? itemCount() : 0;
 
   const isActive = (href) => {
     const pathOnly = href.split("?")[0];
@@ -52,7 +58,7 @@ export default function Navbar() {
               DC
             </div>
             <span className="font-display text-base font-bold uppercase tracking-widest hidden sm:block">
-              DÃ¤ckcentrum
+              Däckcentrum
             </span>
           </Link>
         </div>

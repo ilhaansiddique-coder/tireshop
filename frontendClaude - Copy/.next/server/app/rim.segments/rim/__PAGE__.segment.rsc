@@ -1,6 +1,0 @@
-1:"$Sreact.fragment"
-2:I[83508,["/_next/static/chunks/f565c4a4784943b2.js","/_next/static/chunks/08fa597ed0515b7c.js"],""]
-3:I[34982,["/_next/static/chunks/cedb21191a4fadd5.js","/_next/static/chunks/919fda21cac3e2fe.js"],"OutletBoundary"]
-4:"$Sreact.suspense"
-0:{"buildId":"AM89qyMneUId-kz_5fztq","rsc":["$","$1","c",{"children":[["$","section",null,{"className":"mx-auto flex min-h-[55vh] w-full max-w-[1400px] items-center px-4 py-20 sm:px-6","children":["$","div",null,{"className":"max-w-3xl","children":[["$","p",null,{"className":"mb-4 text-xs font-semibold uppercase tracking-[0.28em] text-brand-yellow","children":"TireStore"}],["$","h1",null,{"className":"font-display text-5xl font-bold uppercase leading-none tracking-wide text-brand-text sm:text-6xl","children":"Rim"}],["$","p",null,{"className":"mt-5 max-w-xl text-base text-brand-muted sm:text-lg","children":"Browse alloy and steel rim options by size, offset, and bolt pattern. This page is ready for rim-specific catalog integration."}],["$","$L2",null,{"href":"/","className":"mt-8 inline-flex rounded-lg bg-brand-yellow px-5 py-3 text-sm font-bold uppercase tracking-wide text-brand-dark hover:bg-brand-amber","children":"Browse Deck"}]]}]}],null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"loading":null,"isPartial":false}
-5:null

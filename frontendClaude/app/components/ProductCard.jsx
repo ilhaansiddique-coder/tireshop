@@ -3,17 +3,15 @@ import { useState } from "react";
 import Image from "next/image";
 import {
   ShoppingCart,
-  Star,
   Zap,
-  Wind,
   Droplets,
   Volume2,
   Check,
-  Info,
 } from "lucide-react";
 import { useCartStore } from "../store";
+import { productImageUrl, formatPrice } from "@/lib/api";
 
-function EuLabelBadge({ value, type }) {
+function EuLabelBadge({ value }) {
   if (!value) return null;
   const colors = {
     A: "bg-green-500",
@@ -26,16 +24,14 @@ function EuLabelBadge({ value, type }) {
   };
   const bg = colors[value?.toUpperCase()] || "bg-brand-muted";
   return (
-    <span
-      className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-bold text-white ${bg}`}
-    >
+    <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-bold text-white ${bg}`}>
       {value}
     </span>
   );
 }
 
 function StockBadge({ quantity }) {
-  if (!quantity) return null;
+  if (quantity === null || quantity === undefined) return null;
   const isLow = quantity <= 4;
   return (
     <span
@@ -50,70 +46,90 @@ function StockBadge({ quantity }) {
   );
 }
 
+function toNumber(value) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+}
+
 export default function ProductCard({ product, style }) {
   const [added, setAdded] = useState(false);
   const [imageFailed, setImageFailed] = useState(false);
   const addItem = useCartStore((s) => s.addItem);
 
-  // Normalise product fields — the API may vary
-  const name = product?.brandName || product?.brand?.name || "—";
-  const model = product?.productName || product?.name || product?.model || "";
-  const price = product?.price || product?.priceIncVat || product?.priceExVat || null;
-  const currency = product?.currency || "SEK";
-  const firstImage = Array.isArray(product?.images) ? product.images[0] : null;
-  const imageUrl =
-    product?.imageUrl ||
-    product?.image?.webshop_thumb ||
-    (typeof product?.image === "string" ? product.image : product?.image?.url) ||
-    (typeof firstImage === "string" ? firstImage : firstImage?.url) ||
-    null;
+  // ── Brand: search API (brand.name) + export API (brand_name) ──
+  const name =
+    product?.brandName ||
+    product?.brand?.name ||
+    product?.brand_name ||
+    product?.tyre_brand_name ||
+    product?.rim_brand_name ||
+    (typeof product?.brand === "string" ? product.brand : null) ||
+    "—";
+
+  // ── Model/Product name ──
+  const model =
+    product?.productName ||
+    product?.name ||
+    product?.description ||
+    product?.model_name ||
+    product?.tyre_model_name ||
+    product?.rim_model_name ||
+    (typeof product?.model === "string" ? product.model : product?.model?.name) ||
+    "";
+
+  // ── Price (in öre from API) ──
+  const priceOre =
+    product?.price ?? product?.priceIncVat ?? product?.priceExVat ?? null;
+
+  // ── Image ──
+  const imageUrl = productImageUrl(product);
+
+  // ── Dimensions ──
   const diameter = product?.diameter || product?.dimension?.diameter || "";
   const width = product?.width || product?.dimension?.width || "";
-  const aspectRatio = product?.aspectRatio || product?.dimension?.aspectRatio || "";
-  const speedIndex = product?.speedIndex || "";
-  const loadIndex = product?.loadIndex || "";
-  const stock = product?.quantityInStock ?? product?.stockQuantity ?? null;
+  const aspectRatio = product?.aspectRatio || product?.aspect_ratio || product?.dimension?.aspectRatio || "";
+  const speedIndex = product?.speedIndex || product?.tyre_speed_index || "";
+  const loadIndex = product?.loadIndex || product?.tyre_load_index || "";
+  const stock = product?.quantityInStock ?? product?.stockQuantity ?? product?.stock ?? null;
 
-  // EU label data
-  const rollingResistance = product?.rollingResistance || "";
-  const wetGrip = product?.wetGrip || "";
-  const noiseDb = product?.noiseEmissionDecibel || product?.noiseDecibel || "";
+  // ── EU label data ──
+  const rollingResistance = product?.rollingResistance || product?.tyre_rolling_resistance || "";
+  const wetGrip = product?.wetGrip || product?.tyre_wet_grip || "";
+  const noiseDb = product?.noiseEmissionDecibel || product?.noiseDecibel || product?.tyre_noise_emission_decibel || "";
 
   const dimensionStr = [width, aspectRatio, diameter].filter(Boolean).join("/");
   const fullSpec = dimensionStr ? `${dimensionStr} ${speedIndex}${loadIndex}`.trim() : "";
-  const idParts =
-    typeof product?.id === "string" && product.id.includes(":")
-      ? product.id.split(":")
-      : [];
-  const parsedProductId = idParts[0] ? Number(idParts[0]) : NaN;
-  const parsedSupplierId = idParts[1] ? Number(idParts[1]) : NaN;
-  const parsedLocationId = idParts[2] ? Number(idParts[2]) : NaN;
-  const orderProductId = Number(
-    product?.productId ??
-      product?.articleNumber ??
-      (Number.isFinite(parsedProductId) ? parsedProductId : NaN)
-  );
-  const orderSupplierId = Number(
-    product?.supplier?.id ??
-      (Number.isFinite(parsedSupplierId) ? parsedSupplierId : NaN)
-  );
-  const orderLocationId = Number(
-    product?.location?.id ??
-      (Number.isFinite(parsedLocationId) ? parsedLocationId : NaN)
-  );
+
+  // ── Cart IDs ──
+  const orderProductId =
+    toNumber(product?.orderProductId) ??
+    toNumber(product?.product_id) ??
+    toNumber(product?.productId);
+  const orderSupplierId =
+    toNumber(product?.orderSupplierId) ??
+    toNumber(product?.supplier?.id) ??
+    toNumber(product?.supplier_id);
+  const orderLocationId =
+    toNumber(product?.orderLocationId) ??
+    toNumber(product?.location?.id) ??
+    toNumber(product?.location_id);
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
+    e.preventDefault();
+    const cartItemId =
+      orderProductId !== null
+        ? `${orderProductId}:${orderLocationId ?? 0}:${orderSupplierId ?? 0}`
+        : String(product.id || product.articleNumber);
     addItem({
-      id: product.id || product.articleNumber,
+      id: cartItemId,
       name: `${name} ${model}`,
-      price: parseFloat(price) || 0,
-      currency,
+      price: priceOre,
       imageUrl,
       spec: fullSpec,
-      orderProductId: Number.isFinite(orderProductId) ? orderProductId : null,
-      orderSupplierId: Number.isFinite(orderSupplierId) ? orderSupplierId : null,
-      orderLocationId: Number.isFinite(orderLocationId) ? orderLocationId : null,
+      orderProductId,
+      orderSupplierId,
+      orderLocationId,
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 1800);
@@ -133,9 +149,7 @@ export default function ProductCard({ product, style }) {
             fill
             className="object-contain p-4 group-hover:scale-105 transition-transform duration-500"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            onError={(e) => {
-              setImageFailed(true);
-            }}
+            onError={() => setImageFailed(true)}
           />
         ) : (
           <div className="flex flex-col items-center gap-2 text-brand-border">
@@ -145,14 +159,11 @@ export default function ProductCard({ product, style }) {
             <span className="text-xs text-brand-muted">No image</span>
           </div>
         )}
-
-        {/* Corner accent */}
         <div className="absolute top-0 right-0 w-0 h-0 border-t-[32px] border-r-[32px] border-t-transparent border-r-brand-yellow/20 opacity-0 group-hover:opacity-100 transition-opacity" />
       </div>
 
       {/* Content */}
       <div className="flex flex-col flex-1 p-4 gap-3">
-        {/* Brand + model */}
         <div>
           <p className="font-display text-xs font-600 tracking-[0.15em] uppercase text-brand-yellow">
             {name}
@@ -162,14 +173,12 @@ export default function ProductCard({ product, style }) {
           </h3>
         </div>
 
-        {/* Spec */}
         {fullSpec && (
           <p className="font-mono text-xs text-brand-muted bg-brand-surface px-2 py-1 rounded inline-block self-start">
             {fullSpec}
           </p>
         )}
 
-        {/* EU Labels */}
         {(rollingResistance || wetGrip || noiseDb) && (
           <div className="flex items-center gap-2 flex-wrap">
             {rollingResistance && (
@@ -193,7 +202,6 @@ export default function ProductCard({ product, style }) {
           </div>
         )}
 
-        {/* Stock */}
         {stock !== null && (
           <div>
             <StockBadge quantity={stock} />
@@ -203,15 +211,12 @@ export default function ProductCard({ product, style }) {
         {/* Footer: Price + CTA */}
         <div className="mt-auto pt-3 border-t border-brand-border flex items-center justify-between gap-2">
           <div>
-            {price ? (
+            {priceOre ? (
               <>
                 <p className="font-display text-xl font-bold text-brand-text tracking-tight">
-                  {parseFloat(price).toLocaleString("sv-SE", {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0,
-                  })}
+                  {formatPrice(priceOre)}
                 </p>
-                <p className="text-[10px] text-brand-muted uppercase tracking-wide">{currency} / each</p>
+                <p className="text-[10px] text-brand-muted uppercase tracking-wide">SEK / each</p>
               </>
             ) : (
               <p className="text-sm text-brand-muted">Price on request</p>

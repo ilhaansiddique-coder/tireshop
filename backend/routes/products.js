@@ -5,6 +5,12 @@ const router = express.Router();
 const TIRE_API_BASE = "https://p511.eontyre.com/api/webshop/products";
 const COMPLETE_WHEELS_API_BASE =
   "https://p511.eontyre.com/api/v2/products/export/complete-wheels";
+const RIMS_EXPORT_API_BASE =
+  "https://p511.eontyre.com/api/v2/products/export/rims";
+const TYRES_EXPORT_API_BASE =
+  "https://p511.eontyre.com/api/v2/products/export/tyres";
+const EXTRA_PRODUCTS_API_BASE =
+  "https://p511.eontyre.com/webshop/extraproducts";
 const WEBSHOP_ID = process.env.WEBSHOP_ID || "38";
 const API_KEY = process.env.API_KEY || "";
 
@@ -60,6 +66,54 @@ function normaliseCompleteWheel(item) {
     width: item?.width ?? null,
     aspectRatio: item?.aspect_ratio ?? null,
     diameter: item?.diameter ?? null,
+    images,
+    imageUrl: images[0]?.url || null,
+  };
+}
+
+function normaliseRim(item) {
+  const productId = Number(item?.product_id);
+  const locationId = Number(item?.location_id);
+  const supplierId = Number(item?.supplier_id);
+
+  const safeProductId = Number.isFinite(productId) ? productId : 0;
+  const safeLocationId = Number.isFinite(locationId) ? locationId : 0;
+  const safeSupplierId = Number.isFinite(supplierId) ? supplierId : 0;
+
+  const compositeId = `${safeProductId}:${safeLocationId}:${safeSupplierId}`;
+
+  const images = Array.isArray(item?.images)
+    ? item.images
+        .map((image) => {
+          const url = buildCompleteWheelImageUrl(image);
+          return url ? { ...image, url } : null;
+        })
+        .filter(Boolean)
+    : [];
+
+  const brand = item?.brand_name || "";
+  const model = item?.model_name || "";
+  const title = item?.description || [brand, model].filter(Boolean).join(" ");
+
+  return {
+    ...item,
+    id: compositeId,
+    productId: safeProductId || null,
+    orderProductId: safeProductId || null,
+    orderSupplierId: safeSupplierId || null,
+    orderLocationId: safeLocationId || null,
+    name: title || "Rim",
+    brand: brand || item?.product_type_name || "Rim",
+    model: model,
+    stock: item?.stock ?? 0,
+    price: item?.price ?? null,
+    width: item?.width ?? null,
+    diameter: item?.diameter ?? null,
+    rimType: item?.rim_type_name ?? null,
+    rimTypeId: item?.rim_type_id ?? null,
+    etOffset: item?.rim_et ?? null,
+    centreBore: item?.rim_centre_bore ?? null,
+    boltPatterns: item?.rim_pcds ?? [],
     images,
     imageUrl: images[0]?.url || null,
   };
@@ -131,6 +185,10 @@ function buildApiParams(query) {
   if (query.carApprovalMark) params.set("carApprovalMark", query.carApprovalMark);
   if (query.comment) params.set("comment", query.comment);
   if (query.vehicleId) params.set("vehicleId", query.vehicleId);
+  if (query.licenseplate) params.set("licenseplate", query.licenseplate);
+  if (query.rimType) params.set("rimType", query.rimType);
+  if (query.boltPattern) params.set("boltPattern", query.boltPattern);
+  if (query.doNotAutoFilterSpeedLoadIndex) params.set("doNotAutoFilterSpeedLoadIndex", query.doNotAutoFilterSpeedLoadIndex);
 
   // Array params: includeLocations
   const locations = query["includeLocations[]"]
@@ -150,6 +208,131 @@ function buildApiParams(query) {
 
   return params;
 }
+
+// GET /api/products/rims-export — list all rim products via export endpoint
+router.get("/rims-export", async (req, res) => {
+  try {
+    if (!API_KEY) return res.status(500).json({ error: "Server missing API_KEY" });
+
+    const page = toPositiveInt(req.query.page, 1);
+    const limit = toPositiveInt(req.query.limit, 24);
+    const query = typeof req.query.query === "string" ? req.query.query.trim() : "";
+    const minQuantityInStock = toPositiveInt(req.query.minQuantityInStock, 1);
+
+    const params = new URLSearchParams();
+    params.set("webshop_id", String(req.query.webshop_id || WEBSHOP_ID));
+    params.set("minQuantityInStock", String(minQuantityInStock));
+    if (req.query.customer_id) params.set("customer_id", String(req.query.customer_id));
+
+    const url = `${RIMS_EXPORT_API_BASE}?${params.toString()}`;
+    console.log(`[Rims Export] Fetching: ${url}`);
+
+    const response = await axios.get(url, {
+      timeout: 25000,
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "TireStore/1.0",
+        "Api-Key": API_KEY,
+        "api-key": API_KEY,
+      },
+    });
+
+    const upstream = response.data || {};
+    let source = Array.isArray(upstream?.data) ? upstream.data : [];
+
+    // Client-side text search
+    if (query) {
+      const q = query.toLowerCase();
+      source = source.filter((item) => {
+        const parts = [
+          item?.description, item?.supplier_description, item?.brand_name,
+          item?.model_name, item?.supplier_name, item?.supplier_product_id,
+          item?.product_id, item?.ean, item?.rim_type_name, item?.vehicle_type_name,
+        ];
+        return parts.some((p) => String(p ?? "").toLowerCase().includes(q));
+      });
+    }
+
+    // Client-side dimension filters
+    if (req.query.diameter) source = source.filter((i) => String(i?.diameter) === String(req.query.diameter));
+    if (req.query.width) source = source.filter((i) => String(i?.width) === String(req.query.width));
+    if (req.query.rimType) source = source.filter((i) => String(i?.rim_type_id) === String(req.query.rimType));
+    if (req.query.boltPattern) source = source.filter((i) => Array.isArray(i?.rim_pcds) && i.rim_pcds.includes(req.query.boltPattern));
+
+    const count = source.length;
+    const start = (page - 1) * limit;
+    const items = source.slice(start, start + limit).map((item) => normaliseRim(item));
+
+    return res.json({ err: upstream?.err || null, count, page, limit, data: { products: items } });
+  } catch (err) {
+    if (err.response) return res.status(err.response.status).json({ error: "Upstream rims API error", detail: err.response.data });
+    if (err.code === "ECONNABORTED") return res.status(504).json({ error: "Rims API timed out" });
+    res.status(502).json({ error: "Could not reach rims API", detail: err.message });
+  }
+});
+
+// GET /api/products/tyres-export — list all tyre products via export endpoint
+router.get("/tyres-export", async (req, res) => {
+  try {
+    if (!API_KEY) return res.status(500).json({ error: "Server missing API_KEY" });
+
+    const page = toPositiveInt(req.query.page, 1);
+    const limit = toPositiveInt(req.query.limit, 24);
+    const minQuantityInStock = toPositiveInt(req.query.minQuantityInStock, 1);
+
+    const params = new URLSearchParams();
+    params.set("webshop_id", String(req.query.webshop_id || WEBSHOP_ID));
+    params.set("minQuantityInStock", String(minQuantityInStock));
+    if (req.query.customer_id) params.set("customer_id", String(req.query.customer_id));
+
+    const url = `${TYRES_EXPORT_API_BASE}?${params.toString()}`;
+    console.log(`[Tyres Export] Fetching: ${url}`);
+
+    const response = await axios.get(url, {
+      timeout: 25000,
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "TireStore/1.0",
+        "Api-Key": API_KEY,
+        "api-key": API_KEY,
+      },
+    });
+
+    const upstream = response.data || {};
+    const source = Array.isArray(upstream?.data) ? upstream.data : [];
+    const count = source.length;
+    const start = (page - 1) * limit;
+    const items = source.slice(start, start + limit);
+
+    return res.json({ err: upstream?.err || null, count, page, limit, data: { products: items } });
+  } catch (err) {
+    if (err.response) return res.status(err.response.status).json({ error: "Upstream tyres export API error", detail: err.response.data });
+    if (err.code === "ECONNABORTED") return res.status(504).json({ error: "Tyres export API timed out" });
+    res.status(502).json({ error: "Could not reach tyres export API", detail: err.message });
+  }
+});
+
+// GET /api/products/extras — service and accessory products
+router.get("/extras", async (req, res) => {
+  try {
+    const url = `${EXTRA_PRODUCTS_API_BASE}`;
+    console.log(`[Extra Products] Fetching: ${url}`);
+
+    const response = await axios.get(url, {
+      timeout: 15000,
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "TireStore/1.0",
+        "Api-Key": API_KEY,
+        "api-key": API_KEY,
+      },
+    });
+    res.json(response.data);
+  } catch (err) {
+    if (err.response) return res.status(err.response.status).json({ error: "Extra products API error", detail: err.response.data });
+    res.status(502).json({ error: "Could not reach extra products API", detail: err.message });
+  }
+});
 
 // GET /api/products/complete-wheels — list complete wheels using export endpoint
 router.get("/complete-wheels", async (req, res) => {

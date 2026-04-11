@@ -62,13 +62,13 @@ export default function ProductDetailPage() {
     const cartItemId = orderProductId
       ? `${orderProductId}:${orderLocationId ?? 0}:${orderSupplierId ?? 0}`
       : String(product?.id || id);
-    const price = product.price || product.priceIncVat / 1.25;
+    const itemPriceOre = product.price || product.priceIncVat / 1.25;
     addItem(
       {
         id: cartItemId,
         name: product.name,
         brand: typeof product.brand === "string" ? product.brand : product?.brand?.name,
-        price,
+        price: itemPriceOre, // stored in öre
         imageUrl: productImageUrl(product),
         width: product.width,
         aspectRatio: product.aspectRatio,
@@ -118,7 +118,7 @@ export default function ProductDetailPage() {
   if (!product) return null;
 
   const imgUrl = productImageUrl(product);
-  const price = product.price || (product.priceIncVat ? product.priceIncVat / 1.25 : null);
+  const priceOre = product.price || (product.priceIncVat ? product.priceIncVat / 1.25 : null);
   const seasonType = product.tyreType || product.season;
   const inStock = !product.quantityInStock || product.quantityInStock >= qty;
 
@@ -242,13 +242,13 @@ export default function ProductDetailPage() {
             )}
 
             {/* Price */}
-            {price && (
+            {priceOre && (
               <div className="py-4 border-y border-base-300">
                 <p className="heading-display text-5xl text-brand-yellow">
-                  {formatPrice(price)}
+                  {formatPrice(priceOre)}
                 </p>
                 <p className="text-xs text-base-content/40 font-body mt-1">
-                  excl. VAT · {formatPrice(price * 1.25)} incl. VAT
+                  excl. VAT · {formatPrice(priceOre, { inclVat: true })} incl. VAT
                 </p>
               </div>
             )}
